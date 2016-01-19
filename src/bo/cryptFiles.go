@@ -5,8 +5,8 @@ import (
 )
 
 type Attr struct {
-	abs *QueryString
-	data *Object
+	abs QueryString
+	data Object
 }
 
 type QueryString struct {
