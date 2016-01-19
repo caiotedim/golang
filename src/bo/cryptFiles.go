@@ -5,8 +5,8 @@ import (
 )
 
 type Attr struct {
-	abs QueryString
-	data Object
+	abs *QueryString
+	data *Object
 }
 
 type QueryString struct {
@@ -15,7 +15,7 @@ type QueryString struct {
 }
 
 type Object struct {
-	data []byte
+	content []byte
 }
 
 
@@ -23,13 +23,13 @@ func SetFile(queryString map[string]string, file []byte) ( bool, int ) {
 	var object Attr
 	object.abs.path = queryString["path"]
 	object.abs.file = queryString["file"]
-	object.data.data = file
+	object.data.content = file
 	//log.Printf("%s", object)
 	var check bool
-	if object.data.data, check = Crypt(object.data.data, "encrypt"); !check {
+	if object.data.content, check = Crypt(object.data.content, "encrypt"); !check {
 		return false, 500
 	}
-	if dao.SaveLocalFile(object.abs.path, object.abs.file, object.data.data) {
+	if dao.SaveLocalFile(object.abs.path, object.abs.file, object.data.content) {
 		return true, 201
 	}
 	return false, 500
@@ -40,14 +40,14 @@ func GetFile(queryString map[string]string) ( []byte, int ) {
 	var respCode int
 	object.abs.path = queryString["path"]
 	object.abs.file = queryString["file"]
-	object.data.data, respCode = dao.ReadLocalFile(object.abs.path, object.abs.file, object.data.data)
+	object.data.content, respCode = dao.ReadLocalFile(object.abs.path, object.abs.file, object.data.content)
 	
 	var check bool
-	if object.data.data, check = Crypt(object.data.data, "decrypt"); !check {
-		return object.data.data, 500
+	if object.data.content, check = Crypt(object.data.content, "decrypt"); !check {
+		return object.data.content, 500
 	}
 	
-	return object.data.data, respCode
+	return object.data.content, respCode
 }
 
 func RemoveFile(queryString map[string]string) ( []byte, int ) {
@@ -55,7 +55,7 @@ func RemoveFile(queryString map[string]string) ( []byte, int ) {
 	var respCode int
 	object.abs.path = queryString["path"]
 	object.abs.file = queryString["file"]
-	object.data.data, respCode = dao.RemoveLocalFile(object.abs.path, object.abs.file, object.data.data)
+	object.data.content, respCode = dao.RemoveLocalFile(object.abs.path, object.abs.file, object.data.content)
 	
-	return object.data.data, respCode
+	return object.data.content, respCode
 }
