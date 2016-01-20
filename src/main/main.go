@@ -2,11 +2,19 @@ package main
 
 import (
     "webapp"
-    //"log"
+    "flag"
+)
+
+var (
+	port *int
 )
 
 
-
 func main() {
-    webapp.Server()
+    webapp.Server(port)
+}
+
+func init() {
+    port = flag.Int("p", 8080, "port")
+    flag.Parse()
 }

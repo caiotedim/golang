@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"log"
 	"bo"
+	"fmt"
 )
 
 type QueryString struct {
@@ -113,7 +114,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	
 }
 
-func Server() {
+func Server(port *int) {
 	http.HandleFunc("/", handler)
-    http.ListenAndServe(":8080", nil)
+    //http.ListenAndServe(string(*port), nil)
+    http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
 }
