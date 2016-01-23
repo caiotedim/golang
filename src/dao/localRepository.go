@@ -15,11 +15,16 @@ func check(err error) bool {
 
 func ReadLocalFile(path, file string, data []byte) ( []byte, int)  {
 	absPath := path + "/"  + file
-	log.Printf("Reading file:[%s]", absPath)
-	data, err := ioutil.ReadFile(absPath)
-	if check(err) {
-		log.Printf("Error to read file:[%s] \n %s %s", absPath, err, string(data))
-		return []byte("Error to read file!"), 500
+	if _, err := os.Stat(absPath); os.IsExist(err) {
+		log.Printf("Reading file:[%s]", absPath)
+		data, err := ioutil.ReadFile(absPath)
+		if check(err) {
+			log.Printf("Error to read file:[%s] \n %s %s", absPath, err, string(data))
+			return []byte("Error to read file!"), 500
+		}	
+	} else {
+		log.Printf("Not found file:[%s]", absPath)
+		return []byte("Not Found"), 404
 	}
 	//log.Printf("Content file:[%s]", string(data))
 	return data, 200
@@ -52,12 +57,13 @@ func SaveLocalFile(path, file string, data []byte) bool {
 }
 
 func CreateLocalDir(path string) bool {
-	log.Printf("Creating directory:[%s]", path)
-	if err := os.MkdirAll(path, 0755); err != nil {
-		log.Printf("Error to create path:[%s] \n %s", path, err)
-		return false	
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		log.Printf("Creating directory:[%s]", path)
+		if err := os.MkdirAll(path, 0755); err != nil {
+			log.Printf("Error to create path:[%s] \n %s", path, err)
+			return false
+		}	
 	}
-
 	return true
 }
 

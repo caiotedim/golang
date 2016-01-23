@@ -7,14 +7,16 @@ import (
 
 var (
 	port *int
+	bind *string
 )
 
 
 func main() {
-    webapp.Server(port)
+    webapp.Server(bind, port)
 }
 
 func init() {
+	bind = flag.String("b", "127.0.1", "bind address")
     port = flag.Int("p", 8080, "port")
     flag.Parse()
 }

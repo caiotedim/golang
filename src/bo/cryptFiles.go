@@ -42,9 +42,13 @@ func GetFile(queryString map[string]string) ( []byte, int ) {
 	object.abs.file = queryString["file"]
 	object.data.content, respCode = dao.ReadLocalFile(object.abs.path, object.abs.file, object.data.content)
 	
-	var check bool
-	if object.data.content, check = Crypt(object.data.content, "decrypt"); !check {
-		return object.data.content, 500
+	if respCode == 200 {
+		var check bool
+		if object.data.content, check = Crypt(object.data.content, "decrypt"); !check {
+			return object.data.content, respCode
+		}
+	} else {
+		return object.data.content, respCode
 	}
 	
 	return object.data.content, respCode

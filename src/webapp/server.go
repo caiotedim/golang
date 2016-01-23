@@ -114,8 +114,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	
 }
 
-func Server(port *int) {
+func Server(bind *string, port *int) {
 	http.HandleFunc("/", handler)
     //http.ListenAndServe(string(*port), nil)
-    http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+    http.ListenAndServe(fmt.Sprintf("%s:%d", *bind, *port), nil)
 }
