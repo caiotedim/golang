@@ -13,21 +13,33 @@ func check(err error) bool {
 	return false
 }
 
+func isFile(path, file string) bool {
+	absPath := path + "/" + file
+	fileInfo, err := os.Stat(absPath); if err != nil {
+		return false
+	}
+	if fileInfo.IsDir() {
+		return false
+	} else {
+		return true
+	}
+}
+
 func ReadLocalFile(path, file string, data []byte) ( []byte, int)  {
 	absPath := path + "/"  + file
-	if _, err := os.Stat(absPath); os.IsExist(err) {
+	if isFile(path, file) {
 		log.Printf("Reading file:[%s]", absPath)
 		data, err := ioutil.ReadFile(absPath)
 		if check(err) {
 			log.Printf("Error to read file:[%s] \n %s %s", absPath, err, string(data))
 			return []byte("Error to read file!"), 500
-		}	
+		}
+		return data, 200
 	} else {
-		log.Printf("Not found file:[%s]", absPath)
+		log.Printf("File not found: [%s]", absPath)
 		return []byte("Not Found"), 404
 	}
 	//log.Printf("Content file:[%s]", string(data))
-	return data, 200
 }
 
 func RemoveLocalFile(path, file string, data []byte) ( []byte, int)  {

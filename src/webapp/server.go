@@ -8,10 +8,10 @@ import (
 	"fmt"
 )
 
-type QueryString struct {
+/*type QueryString struct {
 	path string
 	file string
-}
+}*/
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Method: [%s]", r.Method)
@@ -90,8 +90,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(400)
 		} else if _, ok := m["path"]; !ok {
 			log.Printf("Invalid Parameters!")
-			w.WriteHeader(400) 
-			
+			w.WriteHeader(400) 	
 		} else { 
 		
 			queryString := map[string]string{
@@ -104,18 +103,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			
 			w.WriteHeader(respCode)
 			w.Write(body)
-			
 		}
 		
 	} else {
-
 		w.WriteHeader(400)
 	}
 	
 }
 
 func Server(bind *string, port *int) {
+	http.HandleFunc("/cert", handlerCert)
 	http.HandleFunc("/", handler)
-    //http.ListenAndServe(string(*port), nil)
     http.ListenAndServe(fmt.Sprintf("%s:%d", *bind, *port), nil)
 }

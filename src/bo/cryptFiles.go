@@ -45,7 +45,7 @@ func GetFile(queryString map[string]string) ( []byte, int ) {
 	if respCode == 200 {
 		var check bool
 		if object.data.content, check = Crypt(object.data.content, "decrypt"); !check {
-			return object.data.content, respCode
+			return []byte("Error on decrypt file"), 500
 		}
 	} else {
 		return object.data.content, respCode

@@ -25,6 +25,7 @@ func Crypt(text []byte, crypt string) ( []byte, bool) {
     if pem_data, err = ioutil.ReadFile(pem_file_path); err != nil {
         return []byte("Error reading pem file: %s"), false
     }
+    //pem_file_path := key
 
     //Package pem implements the PEM data encoding, most commonly used in TLS keys and certificates.
     //Decode will find the next PEM formatted block (certificate, private key etc) in the input.
@@ -66,7 +67,7 @@ func Encrypt_oaep(public_key *rsa.PublicKey, plain_text, label []byte) ( []byte,
     md5_hash = md5.New()
 
     if encrypted, err = rsa.EncryptOAEP(md5_hash, rand.Reader, public_key, plain_text, label); err != nil {
-        log.Fatal(err)
+        log.Printf("%s", err)
         return encrypted, false
     }
     return encrypted, true
@@ -79,7 +80,7 @@ func Decrypt_oaep(private_key *rsa.PrivateKey, encrypted, label []byte) ( []byte
 
     md5_hash = md5.New()
     if decrypted, err = rsa.DecryptOAEP(md5_hash, rand.Reader, private_key, encrypted, label); err != nil {
-        log.Fatal(err)
+        log.Printf("%s", err)
         return decrypted, false
     }
     return decrypted, true
