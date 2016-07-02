@@ -1,4 +1,6 @@
 bin/*
 .project
 .settings
+.idea
 pkg
+bin/
